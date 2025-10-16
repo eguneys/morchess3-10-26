@@ -27,13 +27,13 @@ function _init() {
 function _update(delta: number) {
     t += delta
 
-    scroll_x += scroll_x_speed
+    scroll_x += scroll_x_speed * delta * 0.03
 
     if (scroll_x > 1000) {
         scroll_x = 0
     }
 
-    scroll_x_d += scroll_x_d_speed
+    scroll_x_d += scroll_x_d_speed * delta * 0.03
 
     if (scroll_x_d > 1000) {
         scroll_x_d = 0
@@ -65,7 +65,6 @@ function _render(alpha: number) {
     cx.fillRect(mx, mx, 1920 - mx * 2, 1080 - mx * 2)
 
 
-    cx.globalAlpha = 0.2
 
     cx.beginPath()
     cx.rect(mx, mx, 1920 - mx * 2, 1080 - mx * 2)
@@ -74,11 +73,13 @@ function _render(alpha: number) {
     let s_ix = scroll_x - scroll_x_speed * (1- alpha)
     let s_ix_d = scroll_x_d - scroll_x_d_speed * (1- alpha)
 
+    cx.globalAlpha = 0.2
     diagonal_scrolling_decoration(paths.pawn, 100, 100, 147, s_ix)
     diagonal_scrolling_decoration(paths.pawn, 500, 500, 147, s_ix)
     diagonal_scrolling_decoration(paths.pawn, 900, 900, 147, s_ix)
     diagonal_scrolling_decoration(paths.pawn, 1300, 1300, 147, s_ix)
 
+    cx.globalAlpha = 0.12
     diagonal_scrolling_decoration(paths.bishop, -30, 0, 17, s_ix_d)
     diagonal_scrolling_decoration(paths.bishop, 390, 390, 17, s_ix_d)
     diagonal_scrolling_decoration(paths.bishop, 750, 750, 77, s_ix_d)
@@ -89,6 +90,7 @@ function _render(alpha: number) {
 
     cx.globalAlpha = 1
 
+    
 
     cursor(...cursor_xy)
 
@@ -99,12 +101,12 @@ function diagonal_scrolling_decoration(bishop: Path2D, x: number, y: number, siz
     let i = scroll_x / 1000
 
     // 0 -4 === 1 4
-    for (let j = -5; j < 5; j++) {
-        let a = -500 + x + i * 300 * 5
-        let b = y - i * 300 * 5
+    for (let j = -5; j < 5; j+=1) {
+        let a = -500 + x + i * 330 * 5
+        let b = y - i * 330 * 5
 
-        a += j * 300
-        b -= j * 300
+        a += j * 330
+        b -= j * 330
 
         let s = Vec2.make(a, b).distance(Vec2.make(2330, 0)) / 1000 * 100
 
